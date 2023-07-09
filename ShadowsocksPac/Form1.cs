@@ -60,8 +60,8 @@ namespace ShadowsocksPac
                     // 保存
                     System.IO.File.WriteAllLines(textBox_path.Text + "\\pac.txt", lines);
                     MessageBox.Show("删除成功");
-                    return;
                 }
+                return;
             }
             for (var i = 0; i < lines.Length; i++)
             {
@@ -73,6 +73,13 @@ namespace ShadowsocksPac
                     // 保存
                     System.IO.File.WriteAllLines(textBox_path.Text + "\\pac.txt", lines);
                     MessageBox.Show("添加成功");
+                    // 重启进程 Shadowsocks.exe
+                    Process[] processes = Process.GetProcessesByName("Shadowsocks");
+                    foreach (Process process in processes)
+                    {
+                        process.Kill();
+                    }
+                    Process.Start(textBox_path.Text + "\\Shadowsocks.exe");
                     return;
                 }
             }
