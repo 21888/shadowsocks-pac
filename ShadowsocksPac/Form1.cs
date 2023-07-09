@@ -46,6 +46,7 @@ namespace ShadowsocksPac
                 MessageBox.Show("请输入正确的网址");
                 return;
             }
+
             // 读入txt文件
             string[] lines = System.IO.File.ReadAllLines(textBox_path.Text + "\\pac.txt");
             // 判断是否包含域名
@@ -60,9 +61,12 @@ namespace ShadowsocksPac
                     // 保存
                     System.IO.File.WriteAllLines(textBox_path.Text + "\\pac.txt", lines);
                     MessageBox.Show("删除成功");
+                    RestartShadowsocks();
                 }
+
                 return;
             }
+
             for (var i = 0; i < lines.Length; i++)
             {
                 // 判断是否为@@||local
@@ -73,17 +77,10 @@ namespace ShadowsocksPac
                     // 保存
                     System.IO.File.WriteAllLines(textBox_path.Text + "\\pac.txt", lines);
                     MessageBox.Show("添加成功");
-                    // 重启进程 Shadowsocks.exe
-                    Process[] processes = Process.GetProcessesByName("Shadowsocks");
-                    foreach (Process process in processes)
-                    {
-                        process.Kill();
-                    }
-                    Process.Start(textBox_path.Text + "\\Shadowsocks.exe");
+                    RestartShadowsocks();
                     return;
                 }
             }
-
         }
 
         /// <summary>
@@ -108,8 +105,10 @@ namespace ShadowsocksPac
             if (domain == "")
             {
                 MessageBox.Show("域名不正确");
-                return domain;;
+                return domain;
+                ;
             }
+
             // 判断文件是否存在
             if (!System.IO.File.Exists(textBox_path.Text + "\\pac.txt"))
             {
@@ -119,12 +118,24 @@ namespace ShadowsocksPac
             return domain;
         }
 
+        /// <summary>
+        /// 重启进程
+        /// </summary>
+        void RestartShadowsocks()
+        {
+            // 重启进程 Shadowsocks.exe
+            Process[] processes = Process.GetProcessesByName("Shadowsocks");
+            foreach (Process process in processes)
+            {
+                process.Kill();
+            }
+
+            Process.Start(textBox_path.Text + "\\Shadowsocks.exe");
+        }
+
         private void Form1_Shown(object sender, EventArgs e)
         {
             textBox_url.Focus();
-
         }
     }
-
-
 }
